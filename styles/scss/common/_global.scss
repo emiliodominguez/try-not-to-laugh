@@ -1,0 +1,56 @@
+@import './animations';
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--primary-font);
+}
+
+body {
+    &.loading {
+        &::before,
+        &::after {
+            content: '';
+            position: fixed;
+            z-index: 100;
+        }
+
+        &::before {
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: linear-gradient(175deg, #000, #222);
+        }
+
+        // Spinner
+        &::after {
+            $spinner-size: 25px;
+
+            top: 50%;
+            left: 50%;
+            width: $spinner-size;
+            height: $spinner-size;
+            margin-top: -$spinner-size / 2;
+            margin-left: -$spinner-size / 2;
+            border-radius: 50%;
+            border: 5px solid rgb(var(--theme-primary));
+            border-bottom-color: rgb(var(--theme-primary-light));
+            animation: spin linear infinite 500ms;
+        }
+
+        * {
+            pointer-events: none;
+        }
+    }
+}
+
+main {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

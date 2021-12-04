@@ -1,0 +1,1 @@
+import './joke/index.js';
