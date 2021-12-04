@@ -1,1 +1,1 @@
-import './joke/index.js';
+import './joke.js';

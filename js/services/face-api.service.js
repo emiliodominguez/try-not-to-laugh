@@ -20,12 +20,14 @@ export default class FaceApiService {
      * @param {HTMLVideoElement} video The HTML video element
      */
     #init(video) {
+        const root = location.href.slice(0, location.href.lastIndexOf('/'));
+
         Promise.all([
-            faceapi.nets.tinyFaceDetector.loadFromUri('/js/libraries/models'),
-            faceapi.nets.faceLandmark68Net.loadFromUri('/js/libraries/models'),
-            faceapi.nets.faceRecognitionNet.loadFromUri('/js/libraries/models'),
-            faceapi.nets.faceExpressionNet.loadFromUri('/js/libraries/models'),
-            faceapi.nets.ageGenderNet.loadFromUri('/js/libraries/models')
+            faceapi.nets.tinyFaceDetector.loadFromUri(`${root}/js/libraries/models`),
+            faceapi.nets.faceLandmark68Net.loadFromUri(`${root}/js/libraries/models`),
+            faceapi.nets.faceRecognitionNet.loadFromUri(`${root}/js/libraries/models`),
+            faceapi.nets.faceExpressionNet.loadFromUri(`${root}/js/libraries/models`),
+            faceapi.nets.ageGenderNet.loadFromUri(`${root}/js/libraries/models`)
         ])
             .then(() => {
                 this.#setWebcam(video);

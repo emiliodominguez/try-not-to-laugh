@@ -44,9 +44,10 @@ class Joke extends HTMLElement {
      * @returns The link element
      */
     #setStyles() {
+        const root = location.href;
         const link = document.createElement('link');
         link.setAttribute('rel', 'stylesheet');
-        link.setAttribute('href', '/styles/style.css');
+        link.setAttribute('href', `${root}/styles/style.css`);
         return link;
     }
 }
