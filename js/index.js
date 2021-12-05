@@ -1,4 +1,3 @@
-import './components/joke.js';
 import GameService from './services/game.service.js';
 
 const gameService = new GameService();

@@ -1,4 +1,4 @@
-@import './animations';
+@import '../shared/animations';
 
 *,
 *::before,
@@ -10,6 +10,12 @@
 }
 
 body {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     &.loading {
         &::before,
         &::after {
@@ -59,7 +65,7 @@ body {
     }
 
     &.game-initialized {
-        .video-wrapper {
+        #video-container {
             &::after {
                 opacity: 0;
             }
@@ -71,11 +77,4 @@ body {
             display: block;
         }
     }
-}
-
-main {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }

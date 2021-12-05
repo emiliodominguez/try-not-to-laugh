@@ -1,6 +1,6 @@
-@import '../common/animations';
 @import '../variables/media-queries';
 @import '../shared/placeholders';
+@import '../shared/animations';
 
 .joke {
     @extend %cool-box;
@@ -36,8 +36,8 @@
             content: '';
             position: absolute;
             top: calc(100% + 25px);
-            left: 0;
-            width: 100%;
+            left: 10%;
+            width: 80%;
             height: 10px;
             background-color: rgb(var(--theme-tertiary));
             transform: scaleX(0);

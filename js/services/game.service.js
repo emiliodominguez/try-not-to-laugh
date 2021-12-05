@@ -1,5 +1,7 @@
 import FaceApiService from './face-api.service.js';
 import JokesService from './jokes.service.js';
+import { setTextElement } from '../helpers/index.js';
+import '../types/joke.js';
 
 export default class GameService {
     #video;
@@ -44,12 +46,12 @@ export default class GameService {
             const laughed = await this.#setJoke(joke);
 
             if (laughed) {
-                this.#setGameOverMessage('LOST');
+                this.#setGameOverMessage('LOSE');
                 break;
             }
         }
 
-        this.#setGameOverMessage('WON');
+        this.#setGameOverMessage('WIN');
         document.body.classList.remove('game-initialized');
 
         setTimeout(() => {
@@ -59,20 +61,11 @@ export default class GameService {
 
     /**
      * Sets the current joke
-     * @param {Object} joke The joke
-     * @param {number} joke.id The joke's id
-     * @param {string} joke.type The joke's type
-     * @param {string} joke.setup The joke's setup
-     * @param {string} joke.punchline The joke's punchline
-     * @returns A promise that resolves true or false depending if the player laughs or not
+     * @param {Joke} joke The joke
+     * @returns {Promise<boolean>} A promise that resolves true or false depending if the player laughs or not
      */
     #setJoke(joke) {
-        const jokeElement = document.createElement('app-joke');
-
-        jokeElement.setAttribute('setup', joke.setup);
-        jokeElement.setAttribute('punchline', joke.punchline);
-        this.#jokesWrapper.innerHTML = '';
-        this.#jokesWrapper.append(jokeElement);
+        this.#setJokeElement(joke);
 
         return new Promise((resolve, _) => {
             // The joke passes after 3 seconds
@@ -94,6 +87,21 @@ export default class GameService {
                 }
             }, 100);
         });
+    }
+
+    /**
+     * Sets the joke HTML Element
+     * @param {Joke} joke The joke
+     */
+    #setJokeElement(joke) {
+        const jokeElement = document.createElement('div');
+        const setup = setTextElement('h2', joke.setup, 'setup');
+        const punchline = setTextElement('h2', joke.punchline, 'punchline');
+
+        jokeElement.classList.add('joke');
+        jokeElement.append(setup, punchline);
+        this.#jokesWrapper.innerHTML = '';
+        this.#jokesWrapper.append(jokeElement);
     }
 
     /**

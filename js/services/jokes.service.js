@@ -1,4 +1,5 @@
 import { jokes } from '../common/jokes.js';
+import '../types/joke.js';
 
 export default class JokesService {
     /**
@@ -10,7 +11,7 @@ export default class JokesService {
      * Gets any number (5 by default) of jokes, optionally, a joke type can be defined
      * @param {number} [amount = 5] The jokes amount
      * @param {string} [type = undefined] The jokes type
-     * @returns The jokes array
+     * @returns {Joke[]} The jokes array
      */
     getRandomJokes(amount = 5, type) {
         const randomJokes = [];
@@ -30,7 +31,7 @@ export default class JokesService {
 
     /**
      * Gets the available joke types
-     * @returns The joke types array
+     * @returns {string[]} The joke types array
      */
     getAvailableJokeTypes() {
         return jokes.reduce((accumulator, value) => {
@@ -42,7 +43,7 @@ export default class JokesService {
     /**
      * Get jokes by type
      * @param {string} type The jokes type
-     * @returns The jokes array
+     * @returns {Joke[]} The jokes array
      */
     #getJokesByType(type) {
         return jokes.filter(joke => joke.type === type);
