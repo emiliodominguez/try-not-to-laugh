@@ -13,12 +13,16 @@
         </div>
 
         <main>
-            <div class="game-menu">
+            <div id="game-menu">
                 <h1>Try not to <b>laugh!</b></h1>
                 <button id="start-button">Start</button>
             </div>
 
-            <div id="jokes-wrapper"></div>
+            <div id="jokes"></div>
+
+            <div id="game-over-message">
+                <h1>You <b>{{result}}!</b></h1>
+            </div>
         </main>
 
         <script src="./js/index.js" type="module"></script>

@@ -34,8 +34,8 @@ body {
             left: 50%;
             width: $spinner-size;
             height: $spinner-size;
-            margin-top: -$spinner-size / 2;
-            margin-left: -$spinner-size / 2;
+            margin-top: -$spinner-size * 0.5;
+            margin-left: -$spinner-size * 0.5;
             border-radius: 50%;
             border: 5px solid rgb(var(--theme-primary));
             border-bottom-color: rgb(var(--theme-primary-light));
@@ -44,6 +44,31 @@ body {
 
         * {
             pointer-events: none;
+        }
+
+        #game-menu {
+            display: none;
+        }
+    }
+
+    &.game-initialized,
+    &.game-ended {
+        #game-menu {
+            display: none;
+        }
+    }
+
+    &.game-initialized {
+        .video-wrapper {
+            &::after {
+                opacity: 0;
+            }
+        }
+    }
+
+    &.game-ended {
+        #game-over-message {
+            display: block;
         }
     }
 }

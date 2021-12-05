@@ -1,32 +1,12 @@
 @import '../shared/placeholders';
 @import './animations';
 
-.loading {
-    .game-menu {
-        display: none;
-    }
-}
-
-.game-initialized {
-    .game-menu {
-        opacity: 0 !important;
-    }
-}
-
-.game-menu {
+#game-menu,
+#game-over-message {
     @extend %cool-box;
     @include reveal-box();
-
-    display: block;
     text-align: center;
-    transition: opacity ease 1s;
     z-index: 1;
-
-    h1,
-    button {
-        position: inherit;
-        z-index: 1;
-    }
 
     h1 {
         color: rgb(var(--theme-black));
@@ -37,6 +17,10 @@
             color: rgb(var(--theme-secondary));
         }
     }
+}
+
+#game-menu {
+    transition: opacity ease 1s;
 
     button {
         background-color: transparent;
@@ -60,4 +44,8 @@
             transform: scale(1.25) rotate(-3deg);
         }
     }
+}
+
+#game-over-message {
+    display: none;
 }

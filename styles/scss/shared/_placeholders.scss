@@ -1,6 +1,6 @@
 %cool-box {
     position: relative;
-    border-radius: 15px;
+    border-radius: 10px;
     padding: 10px 15px;
 
     &::before,
@@ -30,5 +30,10 @@
         border-left: 20px solid transparent;
         border-right: 15px solid transparent;
         transform: translate(-50%, -50%) rotate(3deg) scale(1.2);
+    }
+
+    > * {
+        position: relative;
+        z-index: 1;
     }
 }

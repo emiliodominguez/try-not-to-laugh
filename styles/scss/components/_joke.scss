@@ -9,8 +9,9 @@
     position: fixed;
     right: 50px;
     bottom: 50px;
+    max-width: 90vw;
+    text-align: center;
     backdrop-filter: blur(15px);
-    padding: 0 25px;
     font-size: clamp(18px, 5vw, 25px);
     letter-spacing: 1;
     line-height: 1.25;
@@ -24,16 +25,10 @@
         transform: translate(-50%, -50%) rotate(1deg);
     }
 
-    @media #{$max-width-xl} {
+    @media #{$max-width-lg} {
         right: 25px;
         left: 25px;
         bottom: 25px;
-    }
-
-    .setup,
-    .punchline {
-        position: relative;
-        z-index: 1;
     }
 
     .setup {

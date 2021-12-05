@@ -1,10 +1,12 @@
 class Joke extends HTMLElement {
     constructor() {
         super();
+        this.attachShadow({ mode: 'open' });
     }
 
     connectedCallback() {
         if (!this.rendered) {
+            this.#setStyles();
             this.#render();
             this.rendered = true;
         }
@@ -14,15 +16,12 @@ class Joke extends HTMLElement {
      * Sets the custom element
      */
     #render() {
-        const shadow = this.attachShadow({ mode: 'closed' });
         const wrapper = document.createElement('div');
         const setupH2 = this.#setTextElement('h2', this.getAttribute('setup'), 'setup');
         const punchlineH2 = this.#setTextElement('h2', this.getAttribute('punchline'), 'punchline');
-        const link = this.#setStyles();
-
         wrapper.classList.add('joke');
         wrapper.append(setupH2, punchlineH2);
-        shadow.append(link, wrapper);
+        this.shadowRoot.append(wrapper);
     }
 
     /**
@@ -41,14 +40,13 @@ class Joke extends HTMLElement {
 
     /**
      * Sets a link element for the styles
-     * @returns The link element
      */
     #setStyles() {
         const root = location.href;
         const link = document.createElement('link');
         link.setAttribute('rel', 'stylesheet');
         link.setAttribute('href', `${root}/styles/style.css`);
-        return link;
+        this.shadowRoot.append(link);
     }
 }
 

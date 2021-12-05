@@ -2,8 +2,9 @@ import FaceApiService from './face-api.service.js';
 import JokesService from './jokes.service.js';
 
 export default class GameService {
-    #jokesWrapper;
     #video;
+    #jokesWrapper;
+    #gameOverMessage;
     #jokesService;
     #faceApiService;
     #gameConfig;
@@ -12,16 +13,16 @@ export default class GameService {
      * The game service
      */
     constructor() {
-        this.#jokesWrapper = document.querySelector('#jokes-wrapper');
         this.#video = document.querySelector('#video');
+        this.#jokesWrapper = document.querySelector('#jokes');
+        this.#gameOverMessage = document.querySelector('#game-over-message');
         this.#jokesService = new JokesService();
         this.#faceApiService = new FaceApiService(this.#video);
-        this.#gameConfig = Object.seal({
-            initialized: false,
+        this.#gameConfig = Object.freeze({
             jokesAmount: 5,
             jokesDuration: 10, // seconds
-            happinessThreshold: 0.85, // 0 - 1
-            won: false
+            laughThreshold: 0.9, // 0 - 1
+            gameOverScreenDuration: 4 // seconds
         });
 
         // Sets the custom property for the punchline reveal animation delay
@@ -37,23 +38,23 @@ export default class GameService {
     async init() {
         const jokes = this.#jokesService.getRandomJokes(this.#gameConfig.jokesAmount);
 
-        this.#gameConfig.initialized = true;
         document.body.classList.add('game-initialized');
 
         for (const joke of jokes) {
-            this.#jokesWrapper.innerHTML = '';
+            const laughed = await this.#setJoke(joke);
 
-            const passed = await this.#setJoke(joke);
-
-            if (!passed) {
-                this.#gameConfig = { ...this.#gameConfig, initialized: false };
+            if (laughed) {
+                this.#setGameOverMessage('LOST');
                 break;
             }
         }
 
-        this.#jokesWrapper.innerHTML = '';
-        this.#gameConfig = { ...this.#gameConfig, initialized: false };
+        this.#setGameOverMessage('WON');
         document.body.classList.remove('game-initialized');
+
+        setTimeout(() => {
+            document.body.classList.remove('game-ended');
+        }, this.#gameConfig.gameOverScreenDuration * 1000);
     }
 
     /**
@@ -66,16 +67,18 @@ export default class GameService {
      * @returns A promise that resolves true or false depending if the player laughs or not
      */
     #setJoke(joke) {
-        return new Promise((resolve, _) => {
-            const jokeElement = document.createElement('app-joke');
-            jokeElement.setAttribute('setup', joke.setup);
-            jokeElement.setAttribute('punchline', joke.punchline);
-            this.#jokesWrapper.append(jokeElement);
+        const jokeElement = document.createElement('app-joke');
 
+        jokeElement.setAttribute('setup', joke.setup);
+        jokeElement.setAttribute('punchline', joke.punchline);
+        this.#jokesWrapper.innerHTML = '';
+        this.#jokesWrapper.append(jokeElement);
+
+        return new Promise((resolve, _) => {
             // The joke passes after 3 seconds
             let timeout = setTimeout(() => {
-                resolve(true);
                 clearInterval(interval);
+                resolve(false);
             }, this.#gameConfig.jokesDuration * 1000);
 
             // Get face recognition detections, if happiness is over 0.85 the player loses
@@ -83,13 +86,24 @@ export default class GameService {
                 const detections = this.#faceApiService.detections;
 
                 if (detections.length > 0 && detections[0].expressions) {
-                    if (detections[0].expressions.happy > this.#gameConfig.happinessThreshold) {
+                    if (detections[0].expressions.happy > this.#gameConfig.laughThreshold) {
                         clearTimeout(timeout);
                         clearInterval(interval);
-                        resolve(false);
+                        resolve(true);
                     }
                 }
             }, 100);
         });
+    }
+
+    /**
+     * Sets the game over message
+     * @param {string} message The message
+     */
+    #setGameOverMessage(message) {
+        const h1 = this.#gameOverMessage.querySelector('h1');
+        h1.innerHTML = h1.innerHTML.replace('{{result}}', message);
+        this.#jokesWrapper.innerHTML = '';
+        document.body.classList.add('game-ended');
     }
 }
