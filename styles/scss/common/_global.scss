@@ -16,6 +16,20 @@ body {
     justify-content: center;
     align-items: center;
 
+    &.danger {
+        &::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            box-shadow: inset 0 0 150px #ff0000;
+            z-index: 100;
+            animation: glow ease-out infinite 1s;
+        }
+    }
+
     &.loading {
         &::before,
         &::after {

@@ -1,7 +1,7 @@
 import '../libraries/face-api.js';
 
 export default class FaceApiService {
-    #detections = [];
+    #detections = {};
 
     get detections() {
         return this.#detections;
@@ -24,10 +24,10 @@ export default class FaceApiService {
 
         Promise.all([
             faceapi.nets.tinyFaceDetector.loadFromUri(`${root}/js/libraries/models`),
-            faceapi.nets.faceLandmark68Net.loadFromUri(`${root}/js/libraries/models`),
             faceapi.nets.faceRecognitionNet.loadFromUri(`${root}/js/libraries/models`),
-            faceapi.nets.faceExpressionNet.loadFromUri(`${root}/js/libraries/models`),
-            faceapi.nets.ageGenderNet.loadFromUri(`${root}/js/libraries/models`)
+            faceapi.nets.faceExpressionNet.loadFromUri(`${root}/js/libraries/models`)
+            // faceapi.nets.faceLandmark68Net.loadFromUri(`${root}/js/libraries/models`),
+            // faceapi.nets.ageGenderNet.loadFromUri(`${root}/js/libraries/models`)
         ])
             .then(() => {
                 this.#setWebcam(video);
@@ -77,30 +77,32 @@ export default class FaceApiService {
         setInterval(async () => {
             const detectorOptions = new faceapi.TinyFaceDetectorOptions();
             const detector = await faceapi
-                .detectAllFaces(e.target, detectorOptions)
-                .withFaceLandmarks()
-                .withFaceExpressions()
-                .withAgeAndGender();
+                .detectSingleFace(e.target, detectorOptions)
+                .withFaceExpressions();
+            // .withFaceLandmarks()
+            // .withAgeAndGender()
 
-            const detections = faceapi.resizeResults(detector, size);
-            this.#detections = detections;
+            if (detector) {
+                const detections = faceapi.resizeResults(detector, size);
+                this.#detections = detections;
 
-            // #region Draw detections
-            // context.clearRect(0, 0, canvas.width, canvas.height);
+                // #region Draw detections
+                // context.clearRect(0, 0, canvas.width, canvas.height);
 
-            // faceapi.draw.drawDetections(canvas, detections);
-            // faceapi.draw.drawFaceLandmarks(canvas, detections);
-            // faceapi.draw.drawFaceExpressions(canvas, detections);
+                // faceapi.draw.drawDetections(canvas, detections);
+                // faceapi.draw.drawFaceLandmarks(canvas, detections);
+                // faceapi.draw.drawFaceExpressions(canvas, detections);
 
-            // Age detection
-            // detections.forEach(detection => {
-            //     const box = detection.detection.box;
-            //     const drawBox = new faceapi.draw.DrawBox(box, {
-            //         label: Math.round(detection.age) + ' year old ' + detection.gender
-            //     });
-            //     drawBox.draw(canvas);
-            // });
-            // #endregion
+                // Age detection
+                // detections.forEach(detection => {
+                //     const box = detection.detection.box;
+                //     const drawBox = new faceapi.draw.DrawBox(box, {
+                //         label: Math.round(detection.age) + ' year old ' + detection.gender
+                //     });
+                //     drawBox.draw(canvas);
+                // });
+                // #endregion
+            }
         }, 100);
     }
 }

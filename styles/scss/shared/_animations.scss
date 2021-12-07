@@ -45,3 +45,14 @@
         transform: rotate(360deg);
     }
 }
+
+@keyframes glow {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}

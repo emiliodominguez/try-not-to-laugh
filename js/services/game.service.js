@@ -68,7 +68,7 @@ export default class GameService {
         this.#setJokeElement(joke);
 
         return new Promise((resolve, _) => {
-            // The joke passes after 3 seconds
+            // The joke passes after [X] seconds (see game configuration)
             let timeout = setTimeout(() => {
                 clearInterval(interval);
                 resolve(false);
@@ -78,10 +78,15 @@ export default class GameService {
             let interval = setInterval(() => {
                 const detections = this.#faceApiService.detections;
 
-                if (detections.length > 0 && detections[0].expressions) {
-                    if (detections[0].expressions.happy > this.#gameConfig.laughThreshold) {
+                if (detections && detections.expressions) {
+                    const happiness = detections.expressions.happy;
+
+                    document.body.classList[happiness > 0.5 ? 'add' : 'remove']('danger');
+
+                    if (happiness > this.#gameConfig.laughThreshold) {
                         clearTimeout(timeout);
                         clearInterval(interval);
+                        document.body.classList.remove('danger');
                         resolve(true);
                     }
                 }
